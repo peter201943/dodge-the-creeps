@@ -38,6 +38,7 @@ func _ready():
 	_set_screen_size()
 	_set_sprite()
 	_set_hitbox()
+	#_connect_signals()
 	hide()
 
 func _process(delta):
@@ -59,6 +60,11 @@ func _set_hitbox():
 	# Sets the player's collider and configures it
 	hitbox = self.get_node(hitbox_name)
 	hitbox.set_deferred("disabled", true)
+
+func _connect_signals():
+	# Connects player to every enemy who can collide with the player
+	# ATTN: NOT IN USE !!!
+	get_parent().get_node("mob").connect("body_entered", self, "_on_Player_body_entered")
 
 func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
