@@ -35,9 +35,9 @@ var hitbox							# What stuff collides with
 func _ready():
 	# Prevent locked aspect ratio, async res loading
 	_set_screen_size()
-	_set_my_sprite()
+	_set_sprite()
 	_set_hitbox()
-	#hide()
+	hide()
 
 func _process(delta):
 	_read_input(delta)
@@ -50,13 +50,14 @@ func _set_screen_size():
 	# Sets the `screen_size` variable
 	screen_size = get_viewport_rect().size
 
-func _set_my_sprite():
+func _set_sprite():
 	# Sets the player's sprite and configures it
 	my_sprite = self.get_node(my_sprite_name)
 
 func _set_hitbox():
-	# Sets the player's collider
+	# Sets the player's collider and configures it
 	hitbox = self.get_node(hitbox_name)
+	hitbox.set_deferred("disabled", true)
 
 func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
@@ -110,9 +111,9 @@ func _produce_velocity(velocity):
 
 func _apply_position(velocity, delta):
 	# Apply Position Updates
-	position += velocity * delta
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+	self.position += velocity * delta
+	self.position.x = clamp(position.x, 0, screen_size.x)
+	self.position.y = clamp(position.y, 0, screen_size.y)
 
 func _apply_animation(velocity):
 	# Apply Animation Updates
@@ -144,6 +145,12 @@ func _choose_animation(velocity):
 
 
 # GAMEPLAY EVENTS
+func start(pos):
+	# Re-Initializes the player at the given position
+	self.position = pos
+	show()
+	hitbox.disabled = false
+
 func _on_Player_body_entered(_body):
 	# Whenever the player collides with _anything_, the game is over
 	print("HIT!")
