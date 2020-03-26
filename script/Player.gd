@@ -3,6 +3,7 @@
 
 
 # SETUP
+class_name Player
 extends Area2D
 # A Simple Player Script for Dodging Projectiles in 2D
 
