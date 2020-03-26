@@ -9,7 +9,7 @@ extends Area2D
 
 
 # CONSTANTS
-const sprite_name := "Sprite"		# How we call what we animate
+const my_sprite_name := "Sprite"		# How we call what we animate
 
 
 
@@ -17,7 +17,7 @@ const sprite_name := "Sprite"		# How we call what we animate
 # VARIABLES
 export var speed = 400 				# How fast the player will move (pixels/sec).
 var screen_size  					# Size of the game window.
-var sprite							# What we actually animate
+var my_sprite							# What we actually animate
 
 
 
@@ -25,10 +25,10 @@ var sprite							# What we actually animate
 # LIFECYCLES
 func _ready():
 	_set_screen_size()
-	_set_sprite()
+	_set_my_sprite()
 
 func _process(delta):
-	_read_input()
+	_read_input(delta)
 
 
 
@@ -38,10 +38,10 @@ func _set_screen_size():
 	# Sets the `screen_size` variable
 	screen_size = get_viewport_rect().size
 
-func _set_sprite():
-	sprite = self.get_node(sprite_name)
+func _set_my_sprite():
+	my_sprite = self.get_node(my_sprite_name)
 
-func _read_input():
+func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
 	# Calls each of the input functions to check their events
 	# Also handles actually using the velocity
@@ -50,11 +50,13 @@ func _read_input():
 	var velocity = Vector2()
 	
 	# Check each input option
-	_input_up(velocity)
-	_input_down(velocity)
-	_input_left(velocity)
-	_input_right(velocity)
-	_velocity_check(velocity)
+	velocity = _input_up(velocity)
+	velocity = _input_down(velocity)
+	velocity = _input_left(velocity)
+	velocity = _input_right(velocity)
+	velocity = _produce_velocity(velocity)
+	_apply_animation(velocity)
+	_apply_position(velocity, delta)
 
 
 
@@ -84,13 +86,27 @@ func _input_right(velocity):
 		velocity.x += 1
 	return velocity
 
-func _velocity_check(velocity):
-	# Check for Final Effects
+
+
+
+# OUTPUT EFFECTS
+func _produce_velocity(velocity):
+	# Apply Speed and Normalization
+	velocity = velocity.normalized() * speed
+	return velocity
+
+func _apply_animation(velocity):
+	# Apply Animation Updates
 	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-		sprite.play()
+		my_sprite.play()
 	else:
-		sprite.stop()
+		my_sprite.stop()
+
+func _apply_position(velocity, delta):
+	# Apply Position Updates
+	position += velocity * delta
+	position.x = clamp(position.x, 0, screen_size.x)
+	position.y = clamp(position.y, 0, screen_size.y)
 
 
 
