@@ -18,6 +18,8 @@ const mob_timer_name := "MobTimer"			# What we call the mob timer
 const mob_path_name := "MobPath"			# What we call the mob path
 const spawn_finder_name := "SpawnFinder"	# What we call the spawner
 const hud_name := "HUD"						# What we call the hud
+const music_name := "Music"					# What we call the music
+const death_name := "Death"					# What we call the Dying
 
 
 
@@ -33,6 +35,8 @@ var mob_timer								# Time between spawns
 var mob_path								# Where we can spawn mobs
 var spawn_finder							# Where we spawn a particular mob
 var hud										# How we display messages
+var music									# Background Ambiance
+var death									# Shriek of Pain
 
 
 
@@ -56,6 +60,8 @@ func _load_names():
 	mob_timer = self.get_node(mob_timer_name)
 	mob_path = self.get_node(mob_path_name)
 	hud = self.get_node(hud_name)
+	music = self.get_node(music_name)
+	death = self.get_node(death_name)
 
 
 func _connect_signals():
@@ -75,6 +81,8 @@ func game_over():
 	score_timer.stop()
 	mob_timer.stop()
 	hud.show_game_over()
+	music.stop()
+	death.play()
 
 
 func new_game():
@@ -84,6 +92,7 @@ func new_game():
 	start_timer.start()
 	hud.update_score(score)
 	hud.show_message("Get Ready")
+	music.play()
 
 
 func _start_timers():
