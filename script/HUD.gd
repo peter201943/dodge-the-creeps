@@ -62,7 +62,7 @@ func show_message(text: String) -> void:
 	# Temporarily displays a message to the player
 	message_label.text = text
 	message_label.show()
-	message_label.start()
+	message_timer.start()
 
 func show_game_over():
 	# Displays when player loses

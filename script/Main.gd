@@ -74,6 +74,7 @@ func game_over():
 	# Stops the Game
 	score_timer.stop()
 	mob_timer.stop()
+	hud.show_game_over()
 
 
 func new_game():
@@ -81,6 +82,8 @@ func new_game():
 	score = 0
 	player.start(start_pos.position)
 	start_timer.start()
+	hud.update_score(score)
+	hud.show_message("Get Ready")
 
 
 func _start_timers():
@@ -92,6 +95,7 @@ func _start_timers():
 func _score_point():
 	# Every Cycle of the Score Timer
 	score += 1
+	hud.update_score(score)
 
 
 func _spawn_mob():
@@ -118,6 +122,9 @@ func _spawn_mob():
 	# Set the velocity (speed & direction).
 	mob.linear_velocity = Vector2(rand_range(mob.min_speed, mob.max_speed), 0)
 	mob.linear_velocity = mob.linear_velocity.rotated(direction)
+	
+	# Connect the Mob to the HUD
+	hud.connect("start_game", mob, "_game_start")
 
 
 

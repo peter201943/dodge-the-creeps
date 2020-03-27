@@ -28,9 +28,18 @@ func _ready():
 	# Set Sprite and Animate
 	sprite = self.get_node(sprite_name)
 	sprite.animation = mob_types[randi() % mob_types.size()]
+	self.get_node("Visibility").connect("screen_exited", self, "_exit_screen")
 
-func _on_Visibility_screen_exited():
-	# Destroy this mob
+
+
+
+# HELPERS
+func _exit_screen():
+	# Destroy this mob when off screen
+	queue_free()
+
+func _game_start():
+	# Destroy this mobe when new game
 	queue_free()
 
 
