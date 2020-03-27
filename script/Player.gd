@@ -19,6 +19,8 @@ signal hit							# Tell Enemies, Game, player died
 # CONSTANTS
 const my_sprite_name := "Sprite"	# How we call what we animate
 const hitbox_name := "Hitbox"		# How we call our collider
+const cursor_mode := 0				# If we are using mouse/touch to move
+const keyboard_mode := 1			# If we are using keys to move
 
 
 
@@ -28,6 +30,8 @@ export var speed = 400 				# How fast the player will move (pixels/sec).
 var screen_size  					# Size of the game window.
 var my_sprite						# What we actually animate
 var hitbox							# What stuff collides with
+var move_target						# Where we move towards
+var move_mode						# How we track which mode to use
 
 
 
@@ -39,7 +43,7 @@ func _ready():
 	_set_sprite()
 	_set_hitbox()
 	#_connect_signals()
-	hide()
+	self.hide()
 
 func _process(delta):
 	_read_input(delta)
@@ -47,7 +51,7 @@ func _process(delta):
 
 
 
-# HELPERS
+# READY HELPERS
 func _set_screen_size():
 	# Sets the `screen_size` variable
 	screen_size = get_viewport_rect().size
@@ -66,18 +70,50 @@ func _connect_signals():
 	# ATTN: NOT IN USE !!!
 	get_parent().get_node("mob").connect("body_entered", self, "_on_Player_body_entered")
 
+
+
+
+# INPUT HELPERS
+func _input(event):
+	# Change the target whenever a touch event happens
+	if event is InputEventScreenTouch and event.pressed:
+		move_mode = cursor_mode
+		move_target = event.position
+		print(move_target)
+
 func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
 	# Reset the player's movement vector.
 	var velocity = Vector2()
-	# Check each input option
+	# Check input mode
+	if move_mode == cursor_mode:
+		velocity = _read_keyboard(velocity)
+	elif move_mode == keyboard_mode:
+		velocity = _read_cursor(velocity)
+	# Apply polishing effects
+	velocity = _produce_velocity(velocity)
+	_apply_animation(velocity)
+	_apply_position(velocity, delta)
+
+func _read_keyboard(velocity):
+	# Check each input option for keys
 	velocity = _input_up(velocity)
 	velocity = _input_down(velocity)
 	velocity = _input_left(velocity)
 	velocity = _input_right(velocity)
-	velocity = _produce_velocity(velocity)
-	_apply_animation(velocity)
-	_apply_position(velocity, delta)
+	return velocity
+
+func _read_cursor(velocity):
+	# Check the input event for cursor
+	# Cannot use keys until arrive at target
+	print("dist=" + str(position.distance_to(move_target)))
+	print("pos=" + str(position) + " trg=" + str(move_target))
+	if position.distance_to(move_target) > 10:
+		velocity = (move_target - position).normalized() * speed
+	else:
+		velocity = Vector2()
+		move_mode = keyboard_mode
+	return velocity
 
 
 
@@ -155,12 +191,13 @@ func _choose_animation(velocity):
 func start(pos):
 	# Re-Initializes the player at the given position
 	self.position = pos
-	show()
+	move_target = pos
+	move_mode = keyboard_mode
+	self.show()
 	hitbox.disabled = false
 
 func _on_Player_body_entered(_body):
 	# Whenever the player collides with _anything_, the game is over
-	print("HIT!")
 	hide()
 	emit_signal("hit")
 	hitbox.set_deferred("disabled", true)
