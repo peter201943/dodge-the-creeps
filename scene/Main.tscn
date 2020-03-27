@@ -100,4 +100,6 @@ __meta__ = {
 }
 
 [node name="MessageDelay" type="Timer" parent="HUD"]
+wait_time = 2.0
+one_shot = true
 [connection signal="hit" from="Player" to="." method="game_over"]
