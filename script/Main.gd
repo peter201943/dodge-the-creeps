@@ -45,11 +45,12 @@ func _ready():
 # SETUP HELPERS
 func _load_names():
 	# Assigns the Variables to Nodes in Scene
-	player = self.get_parent().get_node(player_name)
-	start_pos = self.get_parent().get_node(start_pos_name)
-	start_timer = self.get_parent().get_node(start_timer_name)
-	score_timer = self.get_parent().get_node(score_timer_name)
-	mob_timer = self.get_parent().get_node(mob_timer_name)
+	player = self.get_node(player_name)
+	start_pos = self.get_node(start_pos_name)
+	start_timer = self.get_node(start_timer_name)
+	score_timer = self.get_node(score_timer_name)
+	mob_timer = self.get_node(mob_timer_name)
+	print(start_timer_name + ": " + str(start_timer))
 
 
 func _connect_signals():
