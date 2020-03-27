@@ -16,6 +16,8 @@ const start_timer_name := "StartTimer"		# What we call the start timer
 const score_timer_name := "ScoreTimer"		# What we call the score timer
 const mob_timer_name := "MobTimer"			# What we call the mob timer
 const mob_path_name := "MobPath"			# What we call the mob path
+const spawn_finder_name := "SpawnFinder"	# What we call the spawner
+const hud_name := "HUD"						# What we call the hud
 
 
 
@@ -29,6 +31,8 @@ var start_timer								# How long until spawning/scoring starts
 var score_timer								# Time between points
 var mob_timer								# Time between spawns
 var mob_path								# Where we can spawn mobs
+var spawn_finder							# Where we spawn a particular mob
+var hud										# How we display messages
 
 
 
@@ -50,15 +54,17 @@ func _load_names():
 	start_timer = self.get_node(start_timer_name)
 	score_timer = self.get_node(score_timer_name)
 	mob_timer = self.get_node(mob_timer_name)
-	print(start_timer_name + ": " + str(start_timer))
+	mob_path = self.get_node(mob_path_name)
+	hud = self.get_node(hud_name)
 
 
 func _connect_signals():
 	# Connects to each timer and player
-	#player.connect("hit", self, "game_over")
+	player.connect("hit", self, "game_over")
 	start_timer.connect("timeout", self, "_start_timers")
 	score_timer.connect("timeout", self, "_score_point")
 	mob_timer.connect("timeout", self, "_spawn_mob")
+	hud.connect("start_game", self, "new_game")
 
 
 
@@ -92,17 +98,18 @@ func _spawn_mob():
 	# Randomly Spawns a Mob
 	
 	# Choose a random location on Path2D.
-	mob_path.get_node("SpawnFinder").offset = randi()
+	spawn_finder = mob_path.get_node(spawn_finder_name)
+	spawn_finder.offset = randi()
 	
 	# Create a Mob instance and add it to the scene.
 	var mob = Mob.instance()
 	add_child(mob)
 	
 	# Set the mob's direction perpendicular to the path direction.
-	var direction = mob_path.get_node("SpawnFinder").rotation + PI / 2
+	var direction = spawn_finder.rotation + (PI / 2)
 	
 	# Set the mob's position to a random location.
-	mob.position = mob_path.get_node("SpawnFinder").position
+	mob.position = spawn_finder.position
 	
 	# Add some randomness to the direction.
 	direction += rand_range(-PI / 4, PI / 4)
