@@ -88,7 +88,6 @@ func game_over():
 func new_game():
 	# Starts a New Game
 	score = 0
-	print("STARTING")
 	player.start(start_pos.position)
 	start_timer.start()
 	hud.update_score(score)
