@@ -43,6 +43,11 @@ func _ready():
 	move_target = self.position		# Because the Initializer is broken
 	self.hide()
 
+func _input(event):
+	# Change the target whenever a touch event happens
+	if event is InputEventScreenTouch and event.pressed:
+		move_target = event.position
+
 func _process(delta):
 	_read_input(delta)
 
@@ -72,11 +77,6 @@ func _connect_signals():
 
 
 # INPUT HELPERS
-func _input(event):
-	# Change the target whenever a touch event happens
-	if event is InputEventScreenTouch and event.pressed:
-		move_target = event.position
-
 func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
 	# Reset the player's movement vector.
@@ -99,7 +99,6 @@ func _read_keyboard(velocity):
 
 func _read_cursor(velocity):
 	# Check the input event for cursor
-	# Cannot use keys until arrive at target
 	if (self.position.distance_to(move_target) > 10) and (velocity == Vector2(0,0)):
 		velocity = (move_target - self.position).normalized() * speed
 	else:
