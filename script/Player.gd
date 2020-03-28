@@ -43,6 +43,7 @@ func _ready():
 	_set_sprite()
 	_set_hitbox()
 	#_connect_signals()
+	move_target = self.position		# Because the Initializer is broken
 	self.hide()
 
 func _process(delta):
@@ -78,18 +79,25 @@ func _input(event):
 	# Change the target whenever a touch event happens
 	if event is InputEventScreenTouch and event.pressed:
 		move_mode = cursor_mode
+		print("MODE CHANGE: key -> cur")
 		move_target = event.position
-		print(move_target)
+		print("pos=" + str(position) + " trg=" + str(move_target))
 
 func _read_input(delta):
 	# Decodes the player keypresses and trigger the corresponding events
 	# Reset the player's movement vector.
 	var velocity = Vector2()
 	# Check input mode
+	velocity = _read_keyboard(velocity)
+	velocity = _read_cursor(velocity)
+	"""
 	if move_mode == cursor_mode:
 		velocity = _read_keyboard(velocity)
 	elif move_mode == keyboard_mode:
 		velocity = _read_cursor(velocity)
+	else:
+		pass
+	"""
 	# Apply polishing effects
 	velocity = _produce_velocity(velocity)
 	_apply_animation(velocity)
@@ -106,13 +114,15 @@ func _read_keyboard(velocity):
 func _read_cursor(velocity):
 	# Check the input event for cursor
 	# Cannot use keys until arrive at target
-	print("dist=" + str(position.distance_to(move_target)))
-	print("pos=" + str(position) + " trg=" + str(move_target))
-	if position.distance_to(move_target) > 10:
-		velocity = (move_target - position).normalized() * speed
+	print("reading cursor!")
+	if self.position.distance_to(move_target) > 10:
+		velocity = (move_target - self.position).normalized() * speed
+		print("OK!")
 	else:
 		velocity = Vector2()
 		move_mode = keyboard_mode
+		move_target = self.position
+		print("MODE CHANGE: cur -> key")
 	return velocity
 
 
@@ -190,9 +200,11 @@ func _choose_animation(velocity):
 # GAMEPLAY EVENTS
 func start(pos):
 	# Re-Initializes the player at the given position
+	print("STARTING")
 	self.position = pos
 	move_target = pos
 	move_mode = keyboard_mode
+	print("MODE CHANGE: null -> key")
 	self.show()
 	hitbox.disabled = false
 
