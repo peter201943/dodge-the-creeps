@@ -31,7 +31,7 @@ public class Player : Area2D
 	private AnimatedSprite _sprite;							// What gets rendered to screen
 	// Hitbox
 	private const String _hitBoxName = "Hitbox";			// What we call the hitbox
-	private CollisionShape2d _hitBox;						// What collides with enemies
+	private CollisionShape2D _hitBox;						// What collides with enemies
 	#endregion
 
 
@@ -93,7 +93,7 @@ public class Player : Area2D
 	/// </summary>
 	private void SetHitBox()
 	{
-		_hitBox = this.GetNode<CollisionShape2d>(_hitBoxName);
+		_hitBox = this.GetNode<CollisionShape2D>(_hitBoxName);
 		_hitBox.SetDeferred("disabled", true);
 	}
 	#endregion
@@ -135,7 +135,7 @@ public class Player : Area2D
 	/// </summary>
 	private Vector2 ReadCursor(Vector2 _velocity)
 	{
-        if ((this.Position.DistanceTo(_moveTarget) > 10) && (_velocity.equals(new Vector2(0,0))))
+        if ((this.Position.DistanceTo(_moveTarget) > 10) && (_velocity == new Vector2(0,0)))
         {
             _velocity = (_moveTarget - this.Position).Normalized() * speed;
         }
