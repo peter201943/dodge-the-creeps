@@ -47,7 +47,7 @@ public class Player : Area2D
 		SetScreenSize();
 		SetSprite();
 		SetHitBox();
-		//Hide();
+		Hide();
 		_moveTarget = this.Position;
 	}
 
