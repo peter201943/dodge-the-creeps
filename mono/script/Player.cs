@@ -24,7 +24,7 @@ public class Player : Area2D
     [Export]
 	public int speed = 400; 								// How fast the player will move (pixels/sec).
     private Vector2 _screenSize; 							// Size of the game window.
-	private Vector2 _velocity;								// How we move plaves
+	private Vector2 _velocity;								// How we move plavers
 	private Vector2 _moveTarget;							// Where we move towards
 	// Sprite
 	private const String _spriteName = "Sprite";			// What we call the sprite
