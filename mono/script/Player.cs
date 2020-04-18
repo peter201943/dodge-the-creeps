@@ -18,17 +18,18 @@ public class Player : Area2D
 
 	#region variables
 	// Death
-	[Signal]
-	public delegate void Hit();								// Tell Enemies, Game, player died
+	[Signal] public delegate void Hit();					// Tell Enemies, Game, player died
+
 	// Movement
-    [Export]
-	public int speed = 400; 								// How fast the player will move (pixels/sec).
+    [Export] public int speed = 400;						// How fast the player will move (pixels/sec).
     private Vector2 _screenSize; 							// Size of the game window.
 	private Vector2 _velocity;								// How we move plavers
 	private Vector2 _moveTarget;							// Where we move towards
+	
 	// Sprite
 	private const String _spriteName = "Sprite";			// What we call the sprite
 	private AnimatedSprite _sprite;							// What gets rendered to screen
+	
 	// Hitbox
 	private const String _hitBoxName = "Hitbox";			// What we call the hitbox
 	private CollisionShape2D _hitBox;						// What collides with enemies
@@ -43,11 +44,10 @@ public class Player : Area2D
 	/// </summary>
 	public override void _Ready()
 	{
-		// Console.WriteLine("HELLO");
 		SetScreenSize();
 		SetSprite();
 		SetHitBox();
-		// Hide();
+		//Hide();
 		_moveTarget = this.Position;
 	}
 
@@ -162,6 +162,7 @@ public class Player : Area2D
 		}
 		return _velocity;
 	}
+
 	/// <summary>
 	/// Player wants to move down _check_ and _effect_
 	/// </summary>
@@ -173,6 +174,7 @@ public class Player : Area2D
 		}
 		return _velocity;
 	}
+
 	/// <summary>
 	/// Player wants to move left _check_ and _effect_
 	/// </summary>
@@ -184,6 +186,7 @@ public class Player : Area2D
 		}
 		return _velocity;
 	}
+
 	/// <summary>
 	/// Player wants to move right _check_ and _effect_
 	/// </summary>
