@@ -1,3 +1,5 @@
+
+
 # Dodge the Creeps
 
 "Dodge the Creeps!"  Godot Engine 3.0 "getting started" game demonstrating the basics.  
@@ -14,8 +16,9 @@ This game is a companion to the Godot Engine 3.0 Getting Started Guide: http://d
  - GDScript (godot)
  - C# (mono)
 
-
-### Notes
+## Notes
  - https://docs.godotengine.org/en/stable/getting_started/scripting/c_sharp/c_sharp_basics.html
  - https://docs.godotengine.org/en/stable/development/compiling/compiling_with_mono.html#doc-compiling-with-mono
+ - https://giulianob.svbtle.com/godot-csharp-setup
+ - https://github.com/godotengine/godot/issues/36442
 

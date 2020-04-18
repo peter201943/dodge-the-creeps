@@ -2,8 +2,8 @@
 
 
 
-using Godot;
 using System;
+using Godot;
 
 
 
@@ -48,7 +48,7 @@ public class Player : Area2D
 		SetSprite();
 		SetHitBox();
 		// Hide();
-		// _moveTarget = self.Position;
+		_moveTarget = this.Position;
 	}
 
 	public override void _Process(float delta)
@@ -93,7 +93,7 @@ public class Player : Area2D
 	/// </summary>
 	private void SetHitBox()
 	{
-		_hitBox = self.GetNode<CollisionShape2d>(_hitBoxName);
+		_hitBox = this.GetNode<CollisionShape2d>(_hitBoxName);
 		_hitBox.SetDeferred("disabled", true);
 	}
 	#endregion
@@ -135,13 +135,13 @@ public class Player : Area2D
 	/// </summary>
 	private Vector2 ReadCursor(Vector2 _velocity)
 	{
-        if ((self.Position.DistanceTo(_moveTarget) > 10) && (_velocity.equals(new Vector2(0,0))))
+        if ((this.Position.DistanceTo(_moveTarget) > 10) && (_velocity.equals(new Vector2(0,0))))
         {
-            _velocity = (_moveTarget - self.Position).Normalized() * speed;
+            _velocity = (_moveTarget - this.Position).Normalized() * speed;
         }
         else
         {
-            _moveTarget = self.Position;
+            _moveTarget = this.Position;
         }
 		return _velocity;
 	}
@@ -206,7 +206,7 @@ public class Player : Area2D
 	/// </summary>
 	private Vector2 ProduceVelocity(Vector2 _velocity)
 	{
-		_velocity = velocity.Normalized() * speed;
+		_velocity = _velocity.Normalized() * speed;
 		return _velocity;
 	}
 
@@ -215,8 +215,8 @@ public class Player : Area2D
 	/// </summary>
 	private void ApplyAnimation(Vector2 _velocity)
 	{
-		DoAnimate();
-		ChooseAnimation();
+		DoAnimate(_velocity);
+		ChooseAnimation(_velocity);
 	}
 
 	/// <summary>
@@ -224,10 +224,10 @@ public class Player : Area2D
 	/// </summary>
 	private void ApplyMovement(Vector2 _velocity, float delta)
 	{
-		self.Position += _velocity * delta;
-		self.Position = new Vector2(
-			x: Mathf.Clamp(self.Position.x, 0, _screenSize.x),
-			y: Mathf.Clamp(self.Position.y, 0, _screenSize.y)
+		this.Position += _velocity * delta;
+		this.Position = new Vector2(
+			x: Mathf.Clamp(this.Position.x, 0, _screenSize.x),
+			y: Mathf.Clamp(this.Position.y, 0, _screenSize.y)
 		);
 	}
 	#endregion
@@ -279,7 +279,7 @@ public class Player : Area2D
 	/// </summary>
 	public void Start(Vector2 pos)
 	{
-		self.Position = pos;
+		this.Position = pos;
         _moveTarget = pos;
         Show();
         _hitBox.Disabled = false;
