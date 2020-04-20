@@ -109,7 +109,7 @@ public class Player : Area2D
 	{
 		// Reset the player's movement vector.
 		_velocity = new Vector2();
-		// Check each input mode
+		// Check each input by mode
 		_velocity = ReadKeyboard(_velocity);
 		_velocity = ReadCursor(_velocity);
 		// Apply polishing effects
@@ -284,7 +284,7 @@ public class Player : Area2D
 	{
 		this.Position = pos;
         _moveTarget = pos;
-        Show();
+        this.Show();
         _hitBox.Disabled = false;
 	}
 
@@ -293,8 +293,8 @@ public class Player : Area2D
 	/// </summary>
     public void OnPlayerBodyEntered(PhysicsBody2D body)
     {
-        Hide();
-        EmitSignal("Hit");
+        this.Hide();
+        this.EmitSignal("Hit");
         _hitBox.SetDeferred("disabled", true);
     }
 	#endregion

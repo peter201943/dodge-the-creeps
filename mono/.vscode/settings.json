@@ -21,4 +21,7 @@
         "System.SystemException": "always",
         "System.TypeInitializationException": "always"
     },
+    "cSpell.words": [
+        "Mathf"
+    ],
 }
