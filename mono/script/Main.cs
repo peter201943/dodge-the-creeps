@@ -41,6 +41,16 @@ public class Main : Node2D
     // Game
     private Position2D _startPosition;                              // Where player should spawn at
     private Player _player;                                         // The player
+
+    // HUD
+    private HUD _hud;                                               // Where we post text/receive commands from
+    private const String _hudName = "HUD";                          // What we call the hud
+
+    // Sound
+    private AudioStreamPlayer _music;                               // Background ambiance
+    private const String _musicName = "Music";                      // what we call that ambiance
+    private AudioStreamPlayer _death;                               // You Died
+    private const String _deathName = "GameOver";                   // what we call Defeat
     #endregion
 
 
@@ -52,8 +62,8 @@ public class Main : Node2D
     /// </summary>
     public override void _Ready()
     {
-        LoadNames();
-        ConnectSignals();
+        this.LoadNames();
+        this.ConnectSignals();
     }
     #endregion
 
@@ -73,6 +83,9 @@ public class Main : Node2D
         _scoreTimer = this.GetNode<Timer>(_scoreTimerName);
         _mobPath = this.GetNode<Path2D>(_mobPathName);
         _mobSpawnLocation = _mobPath.GetNode<PathFollow2D>(_mobSpawnLocationName);
+        _hud = this.GetNode<HUD>(_hudName);
+        _music = this.GetNode<AudioStreamPlayer>(_musicName);
+        _death = this.GetNode<AudioStreamPlayer>(_deathName);
     }
 
     /// <summary>
@@ -84,6 +97,7 @@ public class Main : Node2D
         _startTimer.Connect("timeout", this, nameof(OnStartTimerTimeout));
         _mobTimer.Connect("timeout", this, nameof(OnMobTimerTimeout));
         _scoreTimer.Connect("timeout", this, nameof(OnScoreTimerTimeout));
+        _hud.Connect("StartGame", this, nameof(NewGame));
     }
 
     /// <summary>
@@ -132,6 +146,9 @@ public class Main : Node2D
 
         // Choose the velocity.
         mobInstance.LinearVelocity = new Vector2(RandRange(150f, 250f), 0).Rotated(direction);
+
+        // Add Self Destruct
+        _hud.Connect("StartGame", mobInstance, "OnStartGame");
     }
     #endregion
 
@@ -145,6 +162,7 @@ public class Main : Node2D
     public void OnScoreTimerTimeout()
     {
         _score++;
+        _hud.UpdateScore(_score);
     }
 
     /// <summary>
@@ -154,6 +172,9 @@ public class Main : Node2D
     {
         _mobTimer.Stop();
         _scoreTimer.Stop();
+        _hud.ShowGameOver();
+        _music.Stop();
+        _death.Play();
     }
 
     /// <summary>
@@ -164,6 +185,9 @@ public class Main : Node2D
         _score = 0;
         _player.Start(_startPosition.Position);
         _startTimer.Start();
+        _hud.UpdateScore(_score);
+        _hud.ShowMessage("Get Ready!");
+        _music.Play();
     }
     #endregion
 

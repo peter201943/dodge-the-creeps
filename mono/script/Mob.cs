@@ -39,7 +39,7 @@ public class Mob : RigidBody2D
     /// </summary>
     public override void _Ready()
     {
-        _sprite = GetNode<AnimatedSprite>(_spriteName);
+        _sprite = this.GetNode<AnimatedSprite>(_spriteName);
         _sprite.Animation = _mobTypes[_random.Next(0, _mobTypes.Length)];
     }
 
@@ -48,7 +48,19 @@ public class Mob : RigidBody2D
     /// </summary>
     public void OnVisibilityScreenExited()
     {
-        QueueFree();
+        this.QueueFree();
+    }
+    #endregion
+
+
+
+    #region helpers
+    /// <summary>
+    /// Destroy this mob on new game
+    /// </summary>
+    public void OnStartGame()
+    {
+        this.QueueFree();
     }
     #endregion
 
